@@ -1,0 +1,50 @@
+/*
+ * Tema do CRM.
+ *
+ * Duas técnicas convivem aqui:
+ *   1. sobrescrever VARIÁVEIS do Bootstrap (--bs-*) para mudar o padrão global;
+ *   2. criar classes próprias com prefixo .login-* para o que é específico.
+ *
+ * Nunca editar bootstrap.min.css: ele é reinstalado a cada npm install.
+ */
+
+:root {
+    /* Trocar a variável muda a fonte do site inteiro de uma vez, sem
+       precisar aplicar uma classe em cada elemento. */
+    --bs-body-font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --bs-body-font-size: 0.95rem;   /* 15.2px — a base usada no CRM original */
+    --bs-body-color: #3f3f3f;
+}
+
+/* Verde da marca — repetido abaixo em foco, links, versão e botão. */
+.login-bg           { background-color: #13b497; }
+
+.login-card         { max-width: 700px; width: 100%;
+                      border-radius: 10px;
+                      box-shadow: 0 8px 16px rgba(0, 0, 0, .15); }
+
+.login-panel-dark   { background-color: #232323; color: #f6f6f6; padding: 16px; }
+.login-panel-form   { padding: 20px; }
+
+.login-input        { background-color: #fff; color: #3f3f3f;
+                      border: 1px solid #cbcbcb; border-radius: 7.2px;
+                      padding: 8px 12px; }
+/* O :focus precisa ser declarado explicitamente porque o Bootstrap já define
+   um azul padrão para .form-control:focus — sem esta regra, o campo focado
+   ficaria azul no meio de um tema verde. */
+.login-input:focus  { background-color: #fff; border-color: #13b497;
+                      box-shadow: 0 0 0 .2rem rgba(19, 180, 151, .25); }
+
+.login-subtitle     { color: #878a99; font-size: .9rem; }
+.login-frase        { color: #878a99; font-size: .8rem; }
+
+.login-link         { color: #13b497; text-decoration: none; font-size: .9rem; }
+.login-link:hover   { text-decoration: underline; }
+
+.login-version      { color: #13b497; font-weight: 700; }
+
+.login-btn          { background-color: #13b497; border: 0; border-radius: 7.2px;
+                      color: #fff; padding: 7px 12px; }
+/* :hover precisa repetir color: #fff porque .btn do Bootstrap redefine a cor
+   do texto no hover e ganharia da regra acima. */
+.login-btn:hover    { background-color: #0f9c82; color: #fff; }
