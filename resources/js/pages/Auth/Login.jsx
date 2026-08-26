@@ -1,32 +1,11 @@
 import { useState } from 'react';
 import { useForm, Head, Link } from '@inertiajs/react';
 
-/*
- * Página de login.
- *
- * O nome do arquivo é o contrato com o backend: Inertia::render('Auth/Login')
- * no PHP resolve para resources/js/pages/Auth/Login.jsx. Renomear o arquivo
- * quebra a rota, mesmo sem nenhum erro de JavaScript.
- */
+// O caminho do arquivo é o contrato: Inertia::render('Auth/Login') resolve para cá.
 export default function Login() {
-    // useState do React para o que é puramente visual: mostrar/ocultar a senha.
-    // Isso não vai para o servidor, então não entra no useForm.
-    const [showPassword, setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false); // só visual, não vai pro servidor
 
-    /*
-     * useForm é o hook do Inertia para formulários. Ele substitui o que seria
-     * um useState por campo + um fetch manual + um estado de "carregando" +
-     * um estado de erros. O objeto passado define os campos e os valores iniciais.
-     *
-     * - data:       valores atuais dos campos;
-     * - setData:    atualiza um campo;
-     * - post:       envia via POST (existe get, put, patch, delete também);
-     * - processing: true enquanto a requisição está no ar — trava o botão;
-     * - errors:     erros de validação vindos do 422 do Laravel, já por campo;
-     * - reset:      volta campos ao valor inicial.
-     *
-     * As chaves aqui precisam bater com as regras do LoginRequest no PHP.
-     */
+    // As chaves precisam bater com as regras do LoginRequest.
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -34,94 +13,58 @@ export default function Login() {
     });
 
     function submit(e) {
-        // Sem isto o navegador faria o envio nativo do form e recarregaria a
-        // página, matando o SPA. É obrigatório em qualquer form React.
-        e.preventDefault();
+        e.preventDefault(); // sem isto o navegador recarrega a página e mata o SPA
 
-        // Não precisa de token CSRF manual: o cliente HTTP do Inertia lê o
-        // cookie XSRF-TOKEN e o reenvia no header sozinho.
-        post('/login', {
-            // onFinish roda no sucesso E no erro. Limpar a senha aqui evita
-            // deixá-la no estado/DOM depois de uma tentativa falha.
-            onFinish: () => reset('password'),
+        post('/login', { // CSRF é automático: o Inertia lê o cookie XSRF-TOKEN
+            onFinish: () => reset('password'), // roda no sucesso e no erro
         });
     }
 
-    return (
-        // Fragmento <>...</>: um componente React só devolve um nó raiz, e o
-        // <Head> não deve ficar dentro da <div> do layout.
+    return ( // um componente só devolve um nó raiz
         <>
-            {/* <Head> injeta no <head> do documento de verdade, fora do #app. */}
-            <Head title="Login — CRM" />
+            <Head title="Login — CRM" /> {/* injeta no <head> real, fora do #app */}
 
             <div className="login-bg d-flex justify-content-center align-items-center min-vh-100 p-3">
                 <div className="login-card overflow-hidden">
-                    {/* row g-0 = grid do Bootstrap sem gutters (colunas coladas) */}
-                    <div className="row g-0">
+                    <div className="row g-0"> {/* g-0 = colunas coladas, sem gutters */}
 
-                        {/* Painel escuro. col-md-6 = metade da largura a partir de
-                            768px e largura total abaixo disso (empilha no celular). */}
-                        <div className="col-md-6 login-panel-dark text-white d-flex flex-column">
-                            {/* alt="" é intencional: imagem decorativa, leitores de
-                                tela devem pular. Só use alt vazio quando a imagem
-                                não carrega informação nenhuma. */}
-                            <img
-                                src="/images/crm.png"
-                                alt=""
-                                className="mb-4 mx-auto d-block"
-                                style={{ width: '250px' }}
-                            />
+                        {/* col-md-6: metade a partir de 768px, empilha abaixo disso */}
+                        <div className="col-md-6 login-panel-dark text-white d-flex flex-column justify-content-center align-items-center">
+                            <img src="/images/crm.png" alt="" className="login-logo" /> {/* alt vazio: decorativa */}
 
-                            {/* mt-auto empurra este bloco para o fim do flex container */}
-                            <div className="mt-auto">
-                                <h4 className="fw-medium mb-1">CRM</h4>
-                                <p className="login-subtitle mb-4">Gestão de relacionamento com cliente.</p>
-                                <div className="login-subtitle">
-                                    Todos os direitos reservado - Diretriz<br />
-                                    Versão - <span className="login-version">4.8.10</span>
-                                </div>
+                            <div className="login-subtitle w-100 px-3 mb-2"> {/* px-3 soma ao padding do painel */}
+                                <h4 className="m-0 text-light">CRM</h4>
+                                <p>Gestão de relacionamento com cliente.</p>
+                                <p className="mt-3">Todos os direitos reservado - Diretriz</p>
+                                <p>Versão - <span className="login-version">4.8.10</span></p>
                             </div>
                         </div>
 
-                        {/* Painel do formulário */}
                         <div className="col-md-6 bg-white login-panel-form">
                             <img
                                 src="/images/diretriz.png"
                                 alt="Diretriz - systems & results"
-                                className="mb-2"
-                                style={{ width: '200px' }}
+                                className="login-brand mb-2"
                             />
                             <p className="login-frase mb-4">Faça o login inserindo as informações abaixo</p>
 
-                            {/* noValidate desliga a validação nativa do navegador para
-                                que todas as mensagens venham do Laravel — uma fonte só
-                                de verdade, e em português. */}
-                            <form onSubmit={submit} noValidate>
+                            <form onSubmit={submit} noValidate> {/* noValidate: as mensagens vêm do Laravel */}
                                 <div className="mb-3">
-                                    {/* htmlFor (não "for") liga o label ao input pelo id:
-                                        clicar no texto foca o campo e o leitor de tela
-                                        anuncia o rótulo certo. */}
-                                    <label htmlFor="email" className="form-label">
+                                    <label htmlFor="email" className="form-label" /* htmlFor liga o label ao id */>
                                         <i className="bi bi-file-person me-1"></i>
                                         E-mail<span className="text-danger">*</span>
                                     </label>
                                     <input
                                         id="email"
                                         type="email"
-                                        // Template string: acrescenta is-invalid (borda
-                                        // vermelha do Bootstrap) só quando o campo tem erro.
-                                        className={`form-control login-input ${errors.email ? 'is-invalid' : ''}`}
-                                        // value + onChange = "controlled component": o React
-                                        // é dono do valor, o input só reflete o estado.
-                                        value={data.email}
+                                        className={`form-control login-input ${errors.email ? 'is-invalid' : ''}`} // is-invalid = borda vermelha
+                                        value={data.email} // value + onChange = controlled component
                                         onChange={(e) => setData('email', e.target.value)}
+                                        placeholder="Digite seu e-mail"
                                         autoComplete="username"
                                         autoFocus
                                     />
-                                    {/* && curto-circuito: se errors.email for undefined, nada
-                                        é renderizado. .invalid-feedback do Bootstrap só
-                                        aparece quando um irmão anterior tem .is-invalid. */}
-                                    {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+                                    {errors.email && <div className="invalid-feedback">{errors.email}</div>} {/* só renderiza se houver erro */}
                                 </div>
 
                                 <div className="mb-3">
@@ -130,31 +73,21 @@ export default function Login() {
                                         Senha<span className="text-danger">*</span>
                                     </label>
 
-                                    {/* position-relative: âncora para o botão do olho,
-                                        que fica em position-absolute dentro dela. */}
-                                    <div className="position-relative">
+                                    <div className="position-relative"> {/* âncora para o botão do olho */}
                                         <input
                                             id="password"
-                                            // Alternar o type entre password e text é
-                                            // literalmente tudo que o "mostrar senha" faz.
-                                            type={showPassword ? 'text' : 'password'}
-                                            // pe-5: espaço à direita pro texto não passar
-                                            // por baixo do ícone.
-                                            className={`form-control login-input pe-5 ${errors.password ? 'is-invalid' : ''}`}
+                                            type={showPassword ? 'text' : 'password'} // é só isso que o "mostrar senha" faz
+                                            className={`form-control login-input pe-5 ${errors.password ? 'is-invalid' : ''}`} // pe-5: espaço pro ícone
                                             value={data.password}
                                             onChange={(e) => setData('password', e.target.value)}
+                                            placeholder="Digite sua senha"
                                             autoComplete="current-password"
                                         />
                                         <button
-                                            // type="button" é essencial: dentro de um <form>,
-                                            // <button> sem type vale como submit — clicar no
-                                            // olho enviaria o formulário.
-                                            type="button"
+                                            type="button" // sem type, <button> dentro de form vira submit
                                             className="btn border-0 bg-transparent position-absolute top-50 end-0 translate-middle-y text-secondary"
                                             onClick={() => setShowPassword(!showPassword)}
-                                            // tabIndex -1 tira do fluxo do Tab: quem termina de
-                                            // digitar a senha quer chegar no botão Entrar.
-                                            tabIndex={-1}
+                                            tabIndex={-1} // tira do fluxo do Tab
                                             aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                                         >
                                             <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
@@ -169,21 +102,16 @@ export default function Login() {
                                             className="form-check-input"
                                             type="checkbox"
                                             id="remember"
-                                            // Checkbox usa checked / e.target.checked,
-                                            // não value / e.target.value.
-                                            checked={data.remember}
+                                            checked={data.remember} // checkbox usa checked, não value
                                             onChange={(e) => setData('remember', e.target.checked)}
                                         />
                                         <label className="form-check-label" htmlFor="remember">Lembrar-me</label>
                                     </div>
-                                    {/* TODO: virar <Link href="/forgot-password"> quando a tela existir */}
-                                    <a href="#" className="login-link">Esqueceu sua senha ?</a>
+                                    <a href="#" className="login-link">Esqueceu sua senha ?</a> {/* TODO: virar <Link> quando a tela existir */}
                                 </div>
 
                                 <div className="text-end">
-                                    {/* disabled durante o envio impede o duplo clique
-                                        que dispararia duas requisições de login. */}
-                                    <button type="submit" className="btn login-btn" disabled={processing}>
+                                    <button type="submit" className="btn login-btn" disabled={processing} /* disabled evita duplo envio */>
                                         <i className="bi bi-door-open me-1"></i>
                                         {processing ? 'Entrando...' : 'Entrar'}
                                     </button>
@@ -191,9 +119,7 @@ export default function Login() {
                             </form>
 
                             <p className="mt-4 mb-0 login-frase">
-                                {/* <Link> do Inertia, não <a>: navega por XHR trocando só o
-                                    componente. Um <a> comum recarregaria a página inteira. */}
-                                Não tem conta? <Link href="/register" className="login-link">Cadastre-se</Link>
+                                Não tem conta? <Link href="/register" className="login-link">Cadastre-se</Link> {/* <Link> navega por XHR, <a> recarregaria tudo */}
                             </p>
                         </div>
                     </div>
