@@ -6,7 +6,7 @@ import inertia from '@inertiajs/vite';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.jsx'],
+            input: ['resources/js/app.jsx'], // o CSS saiu daqui: quem importa agora é o app.jsx
             refresh: true,
         }),
         react(),

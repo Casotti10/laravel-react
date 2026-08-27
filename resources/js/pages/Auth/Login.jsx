@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { useForm, Head, Link } from '@inertiajs/react';
 
-// O caminho do arquivo é o contrato: Inertia::render('Auth/Login') resolve para cá.
-export default function Login() {
+export default function Login() { // Inertia::render('Auth/Login') resolve para este arquivo
     const [showPassword, setShowPassword] = useState(false); // só visual, não vai pro servidor
 
-    // As chaves precisam bater com as regras do LoginRequest.
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({ // as chaves precisam bater com as regras do LoginRequest
         email: '',
         password: '',
         remember: false,

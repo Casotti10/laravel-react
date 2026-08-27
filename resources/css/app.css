@@ -1,18 +1,10 @@
-/*
- * CSS de entrada da aplicação, referenciado em app.blade.php via @vite.
- * A ordem dos @import importa: o Bootstrap entra primeiro para que o
- * login.css consiga sobrescrever variáveis e classes dele depois.
- */
+/* CSS de entrada, referenciado no app.blade.php via @vite. A ordem dos @import importa. */
 
-/* Framework de UI + pacote de ícones (as classes bi-* usadas nos <i>). */
-@import 'bootstrap/dist/css/bootstrap.min.css';
-@import 'bootstrap-icons/font/bootstrap-icons.css';
+@import 'bootstrap/dist/css/bootstrap.min.css';      /* framework de UI */
+@import 'bootstrap-icons/font/bootstrap-icons.css';  /* as classes bi-* usadas nos <i> */
 
-/* Fonte servida localmente (sem depender do Google Fonts em produção).
-   400 = regular, 600 = semibold, 700 = bold. Importar só os pesos usados. */
-@import '@fontsource/poppins/400.css';
-@import '@fontsource/poppins/600.css';
-@import '@fontsource/poppins/700.css';
+@import '@fontsource/poppins/400.css'; /* fonte servida localmente, sem depender do Google Fonts */
+@import '@fontsource/poppins/600.css'; /* 600 = semibold */
+@import '@fontsource/poppins/700.css'; /* 700 = bold — importar só os pesos usados */
 
-/* Nosso tema — precisa vir por último para vencer o Bootstrap. */
-@import './login.css';
+@import './login.css'; /* nosso tema por último, pra vencer o Bootstrap */
