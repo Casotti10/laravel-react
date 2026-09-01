@@ -27,7 +27,7 @@ export default function Login() { // Inertia::render('Auth/Login') resolve para 
                     <div className="row g-0"> {/* g-0 = colunas coladas, sem gutters */}
 
                         {/* col-md-6: metade a partir de 768px, empilha abaixo disso */}
-                        <div className="col-md-6 login-panel-dark text-white d-flex flex-column justify-content-center align-items-center">
+                        <div className="col-lg-6 login-panel-dark text-white d-flex flex-column justify-content-center align-items-center">
                             <img src="/images/crm.png" alt="" className="login-logo" /> {/* alt vazio: decorativa */}
 
                             <div className="login-subtitle w-100 px-3 mb-2"> {/* px-3 soma ao padding do painel */}
