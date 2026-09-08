@@ -1,0 +1,27 @@
+services:
+    mysql:
+        image: mysql:8.4
+        container_name: login-crm-mysql
+        restart: unless-stopped
+        ports:
+            - '${DB_PORT:-3307}:3307'
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+            MYSQL_DATABASE: '${DB_DATABASE:-login_crm}'
+            MYSQL_ROOT_HOST: '%'
+        command:
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
+        volumes:
+            - login-crm-mysql:/var/lib/mysql
+            - ./docker/mysql/init:/docker-entrypoint-initdb.d
+        healthcheck:
+            test: ['CMD', 'mysqladmin', 'ping', '-h', '127.0.0.1']
+            interval: 10s
+            timeout: 5s
+            retries: 10
+            start_period: 30s
+
+volumes:
+    login-crm-mysql:
+        driver: local
