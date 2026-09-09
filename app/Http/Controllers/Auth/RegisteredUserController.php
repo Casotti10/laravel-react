@@ -29,7 +29,6 @@ class RegisteredUserController extends Controller
         ]);
 
         Auth::login($user); // recebe um User pronto; quem confere credenciais é o Auth::attempt()
-
-        return redirect()->route('dashboard');
+        return redirect()->route('login');
     }
 }

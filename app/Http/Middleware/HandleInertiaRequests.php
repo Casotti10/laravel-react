@@ -6,37 +6,27 @@ use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
-    /**
-     * The root template that's loaded on the first page visit.
-     *
-     * @see https://inertiajs.com/server-side-setup#root-template
-     *
-     * @var string
-     */
-    protected $rootView = 'app';
 
-    /**
-     * Determines the current asset version.
-     *
-     * @see https://inertiajs.com/asset-versioning
-     */
+
+    protected $rootView = 'app'; // Define a View principal do Inertia.
+
     public function version(Request $request): ?string
     {
-        return parent::version($request);
+        return parent::version($request); // Verifica a versão dos arquivos.
     }
 
-    /**
-     * Define the props that are shared by default.
-     *
-     * @see https://inertiajs.com/shared-data
-     *
-     * @return array<string, mixed>
-     */
     public function share(Request $request): array
     {
         return [
-            ...parent::share($request),
-            //
+            ...parent::share($request), // Mantém os dados padrão do Inertia.
+
+            'auth' => [
+                'user' => $request->user() ? [ // Verifica se há usuário logado.
+                    'id' => $request->user()->id,       // ID
+                    'name' => $request->user()->name,   // Nome
+                    'email' => $request->user()->email, // E-mail
+                ] : null, // Se não estiver logado, retorna null.
+            ]
         ];
     }
 }

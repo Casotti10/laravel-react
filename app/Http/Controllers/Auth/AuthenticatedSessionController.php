@@ -29,7 +29,6 @@ class AuthenticatedSessionController extends Controller
         }
 
         $request->session()->regenerate(); // novo ID de sessão: mata um session fixation plantado antes do login
-
         return redirect()->route('dashboard'); // redirect, não JSON: o Inertia segue o 302 sozinho
     }
 

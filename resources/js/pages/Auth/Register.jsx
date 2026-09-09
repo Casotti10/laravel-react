@@ -12,7 +12,7 @@ export default function Register() {        // Inertia::render('Auth/Register') 
 
     function submit(e) {
         e.preventDefault();
-        post('resgister',{
+        post('/register',{
             onFinish: () => reset('password', 'password_confirmation'),  //reset aceita varios campos de uma vez
         });
     }
