@@ -4,10 +4,12 @@ import { Head, Link } from '@inertiajs/react';
 export default  function Dashboard({auth}) {
     return  (
         <>
-            <Head title="Dashboard — CRM" />
+            <Head title="Dashboard — CRM"/>
 
-            <nav className="navbar navbar-dark bg-dark px-3">
+            <nav className="navbar bg-primary" data-bs-theme="dark px-3">
                 <span className="navbar-brand mb-0">CRM</span>
+                <img src="../../../public/images/crm.png" alt="Logo" width="30" height="24"
+                     className="d-inline-block align-text-top"/>
 
                 <div className="d-flex align-items-center gap-3">
                     <span className="text-white-50">{auth.user.name}</span>
@@ -30,5 +32,6 @@ export default  function Dashboard({auth}) {
                 <p className="text-muted">{auth.user.email}</p>
             </main>
         </>
+
     )
 }
