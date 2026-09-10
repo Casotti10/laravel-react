@@ -3,8 +3,10 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
-        "dev": "vite"
+        "sass": "sass resources/scss/app.scss public/css/app.css --load-path=node_modules --quiet-deps --silence-deprecation=import --no-source-map --style=compressed",
+        "sass:watch": "sass resources/scss/app.scss public/css/app.css --load-path=node_modules --quiet-deps --silence-deprecation=import --watch",
+        "build": "npm run sass && vite build",
+        "dev": "concurrently -k -n sass,vite -c magenta,cyan \"npm:sass:watch\" \"vite\""
     },
     "devDependencies": {
         "@vitejs/plugin-react": "^6.0.5",
@@ -22,6 +24,7 @@
         "bootstrap": "^5.3.8",
         "bootstrap-icons": "^1.13.1",
         "react": "^19.2.8",
-        "react-dom": "^19.2.8"
+        "react-dom": "^19.2.8",
+        "sass": "^1.104.0"
     }
 }

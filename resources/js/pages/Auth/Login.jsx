@@ -55,7 +55,7 @@ export default function Login() { // Inertia::render('Auth/Login') resolve para 
                                     <input
                                         id="email"
                                         type="email"
-                                        className={`form-control login-input ${errors.email ? 'is-invalid' : ''}`} // is-invalid = borda vermelha
+                                        className={`form-control ${errors.email ? 'is-invalid' : ''}`} // is-invalid = borda vermelha
                                         value={data.email} // value + onChange = controlled component
                                         onChange={(e) => setData('email', e.target.value)}
                                         placeholder="Digite seu e-mail"
@@ -75,7 +75,7 @@ export default function Login() { // Inertia::render('Auth/Login') resolve para 
                                         <input
                                             id="password"
                                             type={showPassword ? 'text' : 'password'} // é só isso que o "mostrar senha" faz
-                                            className={`form-control login-input pe-5 ${errors.password ? 'is-invalid' : ''}`} // pe-5: espaço pro ícone
+                                            className={`form-control pe-5 ${errors.password ? 'is-invalid' : ''}`} // pe-5: espaço pro ícone
                                             value={data.password}
                                             onChange={(e) => setData('password', e.target.value)}
                                             placeholder="Digite sua senha"
@@ -109,7 +109,7 @@ export default function Login() { // Inertia::render('Auth/Login') resolve para 
                                 </div>
 
                                 <div className="text-end">
-                                    <button type="submit" className="btn login-btn" disabled={processing} /* disabled evita duplo envio */>
+                                    <button type="submit" className="btn btn-primary" disabled={processing} /* disabled evita duplo envio */>
                                         <i className="bi bi-door-open me-1"></i>
                                         {processing ? 'Entrando...' : 'Entrar'}
                                     </button>

@@ -5,7 +5,7 @@
 > da documentação oficial.
 >
 > Pré-requisitos já documentados:
-> [BOOTSTRAP-NO-PROJETO.md](BOOTSTRAP-NO-PROJETO.md) (de onde vem cada classe),
+> [FRONTEND.md](FRONTEND.md) (de onde vem cada classe),
 > [criando-uma-pagina.md](criando-uma-pagina.md) (rota → controller → página),
 > [AUTENTICACAO-BACKEND.md](AUTENTICACAO-BACKEND.md) (sessão e middleware `auth`).
 
@@ -189,7 +189,7 @@ Duas mudanças da 5.3 que aparecem em tutoriais velhos como o formato antigo:
 - `ms-`/`me-` substituem `ml-`/`mr-` desde a v5 (suporte a idiomas RTL)
 
 > Mais detalhes e o caminho inverso (do CSS renderizado para a página da doc) em
-> [BOOTSTRAP-NO-PROJETO.md](BOOTSTRAP-NO-PROJETO.md).
+> [FRONTEND.md](FRONTEND.md).
 
 ---
 
@@ -215,7 +215,7 @@ $font-family-base: 'Poppins', system-ui, sans-serif;
 ```
 
 Requer Sass instalado — ver
-[SASS-ORGANIZACAO-PASTAS.md](SASS-ORGANIZACAO-PASTAS.md).
+[FRONTEND.md](FRONTEND.md).
 
 ## Nível 2 — Mapas Sass (`Customize → Color`, "Add to map")
 

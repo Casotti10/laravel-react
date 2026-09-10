@@ -26,7 +26,7 @@ React mais um pacote de props. Quem monta a tela é o `app.jsx`, no navegador.
 - [ ] 2. Controller (ou closure, se não houver lógica)
 - [ ] 3. Form Request — **só** se a tela envia dados (POST/PUT/PATCH)
 - [ ] 4. Componente em `resources/js/pages/`
-- [ ] 5. CSS próprio em `resources/css/` — só se o Bootstrap não bastar
+- [ ] 5. Partial `_tela.scss` em `resources/scss/` — só se o Bootstrap não bastar
 - [ ] 6. Teste em `tests/Feature/`
 - [ ] 7. `vendor/bin/pint --dirty` e conferir no browser
 
@@ -240,14 +240,23 @@ No input, `errors.nome` vira a classe `is-invalid` do Bootstrap mais a
 
 ## 5. O CSS
 
-Tente resolver só com classes do Bootstrap primeiro. Se precisar de estilo próprio,
-crie um arquivo por tela e importe no fim do `app.css`:
+Tente resolver só com classes do Bootstrap primeiro. Se precisar de estilo
+próprio, crie um **partial** por tela (o `_` é obrigatório) e importe no fim do
+`resources/scss/app.scss`:
 
-```css
-@import './clientes.css';   /* nosso tema por último, pra vencer o Bootstrap */
+```scss
+@import 'bootstrap/scss/bootstrap';   // o framework primeiro
+
+@import 'login';
+@import 'clientes';    // sem o "_" e sem a extensão; nosso tema por último
 ```
 
-A ordem dos `@import` é o que decide quem ganha quando duas regras têm o mesmo peso.
+A ordem decide duas coisas: quem ganha o empate de especificidade, e quais
+variáveis existem — `$primary`, `$black` e `shade-color()` só valem **depois**
+do `@import` do Bootstrap.
+
+Se a mudança é de cor ou medida de um componente que o Bootstrap já tem, não
+escreva CSS: procure a variável. Detalhes em [FRONTEND.md](FRONTEND.md).
 
 ---
 

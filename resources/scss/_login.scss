@@ -1,0 +1,21 @@
+/* Tema do CRM. Só o que o Bootstrap não consegue gerar a partir de variáveis. */
+
+.login-bg           { background-color: $primary; } /* a variável, não o hex repetido */
+
+.login-card         { max-width: 700px; width: 100%;
+    border-radius: $border-radius * 2; /* Sass faz conta: .92rem */
+    box-shadow: 0 8px 16px rgba($black, .15); } /* rgba() aceita variável */
+
+.login-panel-dark   { background-color: #232323; color: $light; padding: 16px; }
+.login-panel-form   { padding: 20px; }
+
+.login-subtitle     { color: $body-color; font-size: .9em; }
+.login-frase        { color: $body-color; font-size: .8em; }
+
+.login-link         { color: $primary; text-decoration: none; font-size: .9rem; }
+.login-link:hover   { text-decoration: underline; }
+
+.login-version      { color: $primary; font-weight: $font-weight-bold; }
+
+.login-logo         { width: 250px; height: auto; max-width: 100%; }
+.login-brand        { width: 250px; height: auto; max-width: 100%; }

@@ -1,0 +1,40 @@
+// 1. NOSSAS VARIÁVEIS — antes do Bootstrap, senão o !default dele já terá vencido.
+
+// Marca
+$primary:                 #13b497;
+$light:                   #f6f6f6;
+
+// O Bootstrap decide o texto de .btn-primary/.badge com color-contrast():
+// branco sobre o verde dá ~2,6:1 e reprovava no padrão 4.5, saindo preto.
+// Baixando o mínimo, o branco volta a ganhar — e o hover volta a escurecer.
+$min-contrast-ratio:      2.5;
+
+// Tipografia
+$font-family-base:        'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+$font-size-base:          .95rem;
+$body-color:              #878a99;
+
+// Formulários — o que hoje é a classe .login-input, escrito como configuração
+$input-color:             #000;
+$input-border-color:      #cbcbcb;
+$input-placeholder-color: #878a99;
+$input-padding-y:         .5rem;
+$input-padding-x:         .75rem;
+// No 5.3 o anel de foco nasce em $focus-ring-width e desce a cadeia:
+// $focus-ring-width -> $input-btn-focus-width -> $btn-focus-width.
+// Sobrescrever no meio dela não muda o input; tem que ser no topo.
+$focus-ring-width:        .2rem;
+
+// Cantos
+$border-radius:           .46rem;
+
+
+// 2. O BOOTSTRAP, compilado do fonte já com os valores acima.
+@import 'bootstrap/scss/bootstrap';
+
+// 3. NOSSO TEMA por último: vence a cascata e enxerga $black, $font-weight-bold etc.
+@import 'login';
+
+@import 'bootstrap/scss/bootstrap';
+
+@import 'dashboard';

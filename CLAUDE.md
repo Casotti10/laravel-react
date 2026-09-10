@@ -229,5 +229,5 @@ MySQL only: database `login_crm`, user `root` with an empty password, on `127.0.
 
 - `.claude/skills/` and `.junie/skills/` hold the **same** four Boost skills (`infer-conventions`, `laravel-best-practices`, `pest-testing`, `tailwindcss-development`) duplicated for Claude Code and JetBrains Junie. Edit both or neither.
 - `docs/AGENTS.md` is the same Boost block as `CLAUDE.md`, for other agents. Boost regenerates both.
-- `.ai/rules/` does not exist yet (only `.ai/mcp/mcp.json`); the Boost instructions above reference it because `record-rule` creates it on first use.
+- `.ai/rules/` now exists: `index.md` + `scss.md` (o Sass é compilado pelo CLI, não pelo Vite). Read it before touching `resources/scss/`.
 

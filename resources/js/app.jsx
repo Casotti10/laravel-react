@@ -1,4 +1,11 @@
-import '../css/app.css'; // o CSS entra pelo JS: assim o Vite serve uma representação só do arquivo
+// Ícones e fonte continuam entrando pelo JS de propósito: o CSS deles aponta para
+// arquivos .woff2 com caminho relativo, e é o Vite que reescreve essas URLs e copia
+// as fontes para public/build. O NOSSO Sass saiu daqui — quem compila agora é o
+// `npm run sass`, que gera public/css/app.css, linkado no app.blade.php.
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/600.css';
+import '@fontsource/poppins/700.css';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';

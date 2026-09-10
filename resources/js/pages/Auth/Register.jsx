@@ -53,7 +53,7 @@ export default function Register() {        // Inertia::render('Auth/Register') 
                                     <input
                                         id="name"
                                         type="text"
-                                        className={`form-control login-input ${errors.name ? 'is-invalid' : ''}`}
+                                        className={`form-control ${errors.name ? 'is-invalid' : ''}`}
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
                                         placeholder="Digite seu nome"
@@ -70,7 +70,7 @@ export default function Register() {        // Inertia::render('Auth/Register') 
                                     <input
                                         id="email"
                                         type="email"
-                                        className={`form-control login-input ${errors.email ? 'is-invalid' : ''}`}
+                                        className={`form-control ${errors.email ? 'is-invalid' : ''}`}
                                         value={data.email}
                                         onChange={(e) => setData('email', e.target.value)}
                                         placeholder="Digite seu e-mail"
@@ -90,7 +90,7 @@ export default function Register() {        // Inertia::render('Auth/Register') 
                                         <input
                                             id="password"
                                             type={showPassword ? 'text' : 'password'}
-                                            className={`form-control login-input pe-5 ${errors.password ? 'is-invalid' : ''}`}
+                                            className={`form-control pe-5 ${errors.password ? 'is-invalid' : ''}`}
                                             value={data.password}
                                             onChange={(e) => setData('password', e.target.value)}
                                             placeholder="Mínimo de 8 caracteres"
@@ -119,7 +119,7 @@ export default function Register() {        // Inertia::render('Auth/Register') 
                                 <input
                                     id="password_confirmation"
                                     type={showPassword ? 'text' : 'password'} // mesmo estado do campo acima
-                                    className={`form-control login-input ${errors.password ? 'is-invalid' : ''}`} // só a borda: a mensagem já apareceu no campo anterior
+                                    className={`form-control ${errors.password ? 'is-invalid' : ''}`} // só a borda: a mensagem já apareceu no campo anterior
                                     value={data.password_confirmation}
                                     onChange={(e) => setData('password_confirmation', e.target.value)}
                                     placeholder="Repita a senha"
@@ -128,7 +128,7 @@ export default function Register() {        // Inertia::render('Auth/Register') 
                             </div>
 
                                 <div className="text-end">
-                                    <button type="submit" className="btn login-btn" disabled={processing}>
+                                    <button type="submit" className="btn btn-primary" disabled={processing}>
                                         <i className="bi bi-person-plus me-1"></i>
                                         {processing ? 'Cadastrando...' : 'Cadastrar'}
                                     </button>

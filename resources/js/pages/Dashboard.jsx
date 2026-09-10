@@ -6,31 +6,20 @@ export default  function Dashboard({auth}) {
         <>
             <Head title="Dashboard — CRM"/>
 
-            <nav className="navbar bg-primary" data-bs-theme="dark px-3">
-                <span className="navbar-brand mb-0">CRM</span>
-                <img src="../../../public/images/crm.png" alt="Logo" width="30" height="24"
-                     className="d-inline-block align-text-top"/>
+            <div className={"dashboard" }>
+                <nav className="navbar">
+                    <div className="container-fluid">
+                        <a className="navbar-brand" href="#">
+                            <img src="images/diretrsiz.png" alt="" className="" width="40" height="40"/>
 
-                <div className="d-flex align-items-center gap-3">
-                    <span className="text-white-50">{auth.user.name}</span>
+                        </a>
+                    </div>
+                </nav>
 
-                    {/* method="post" + as="button": o Inertia monta um POST com CSRF.
-                        Um <a> comum mandaria GET e a rota de logout recusa. */}
-                    <Link
-                        href="/logout"
-                        method="post"
-                        as="button"
-                        className="btn btn-sm btn-outline-light"
-                    >
-                        <i className="bi bi-box-arrow-right me-1"></i>Sair
-                    </Link>
-                </div>
-            </nav>
-
-            <main className="container py-4">
-                <h1 className="h4">Bem-vindo, {auth.user.name}</h1>
-                <p className="text-muted">{auth.user.email}</p>
-            </main>
+                <main className="container py-3">
+                    <h1 className="h3 mt-3 text-center" >Bem-vindo, {auth.user.name}</h1>
+                </main>
+            </div>
         </>
 
     )
