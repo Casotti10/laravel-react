@@ -27,6 +27,7 @@ export default function Register() {        // Inertia::render('Auth/Register') 
 
                         <div className="col-md-6 login-panel-dark text-white d-flex flex-column justify-content-center
   align-items-center">
+
                             <img src="/images/crm.png" alt="" className="login-logo" />
 
                             <div className="login-subtitle w-100 px-3 mb-1">

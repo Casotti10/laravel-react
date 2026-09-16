@@ -125,8 +125,10 @@ public/
 | **JS do Bootstrap** | **não carregado** |
 
 Sem o JS, **modal, dropdown, collapse, tooltip, toast e offcanvas não
-funcionam**. Em projeto React o caminho não é importar `bootstrap.bundle.min.js`
-(ele mexe no DOM por fora e briga com o React) e sim usar `react-bootstrap`.
+funcionam** pelos atributos `data-bs-*`. Em projeto React o caminho não é importar
+`bootstrap.bundle.min.js` (ele mexe no DOM por fora e briga com o React). Para modal
+e alerta basta estado do React em volta do HTML da doc — padrão em
+[CRUD-CLIENTES.md](CRUD-CLIENTES.md), Apêndice C.4. Para dropdown e tooltip, `react-bootstrap`.
 
 ---
 
@@ -622,5 +624,5 @@ mesmo tempo.
 
 - [criando-uma-pagina.md](criando-uma-pagina.md) — rota → controller → página React.
 - [AUTENTICACAO-BACKEND.md](AUTENTICACAO-BACKEND.md) — sessão, middleware `auth`.
-- [CRUD-CLIENTES.md](CRUD-CLIENTES.md) — aula prática usando tudo isto.
+- [CRUD-CLIENTES.md](CRUD-CLIENTES.md) — roteiro do CRUD de clientes, passo a passo, usando tudo isto.
 - [DOCKER-MYSQL.md](DOCKER-MYSQL.md) — o banco.
