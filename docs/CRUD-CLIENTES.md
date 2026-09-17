@@ -21,7 +21,7 @@
 | **FASE 4 — Editar** | 16 a 18 | editar pelo lápis |
 | **FASE 5 — Excluir** | 19 e 20 | excluir com modal de confirmação |
 | **FASE 6 — Fechar** | 21 e 22 | testes verdes e commit |
-| **APÊNDICES** | — | A: arquivos finais · B: deu errado? · C: usar a doc do Bootstrap · D: customizar o Bootstrap · E: próximos níveis · F: resumo dos arquivos |
+| **APÊNDICES** | — | A: o código completo de cada arquivo · B: deu errado? · C: usar a doc do Bootstrap · D: customizar o Bootstrap · E: próximos níveis · F: resumo dos arquivos |
 
 ---
 
@@ -1630,6 +1630,200 @@ Terminou uma fase e algo não funciona? Compare **zona por zona** (Mapa 3) com a
 versão final do arquivo. Nos passos intermediários o seu arquivo terá **menos**
 coisas que estas — isso é esperado.
 
+**O que está aqui:** todos os arquivos que o CRUD cria ou altera, na íntegra.
+Os quatro grandes (controller, layout, `Index`, `Form`) são os que mais valem a
+comparação zona por zona; os pequenos estão aqui para você conferir uma vírgula
+ou um `use` sem ter que caçar o passo em que ele apareceu.
+
+| | Arquivos | Passos |
+|---|---|---|
+| **A.1 — Backend** | migration · model · factory · seeder · rotas · controller · 2 Form Requests · middleware | 1–6, 12, 13, 15a, 16, 17, 19 |
+| **A.2 — Frontend** | `AppLayout.jsx` · `Dashboard.jsx` · `Clientes/Index.jsx` · `Clientes/Form.jsx` | 7–11, 14, 15b, 18, 20 |
+| **A.3 — Estilos** | `app.scss` · `_layout.scss` · `_dashboard.scss` | 8c |
+| **A.4 — Testes** | `tests/Pest.php` · `ClienteCrudTest.php` | 21 |
+
+## A.1 — Backend
+
+### `database/migrations/xxxx_create_clientes_table.php`
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('clientes', function (Blueprint $table) {
+            $table->id();
+            $table->string('nome');
+            $table->string('email')->unique();          // unique no banco: a validação sozinha tem corrida de dois cadastros simultâneos
+            $table->string('telefone', 20)->nullable();
+            $table->string('empresa')->nullable();
+            $table->string('status')->default('prospecto');
+            $table->timestamps();                        // created_at e updated_at, mantidos pelo Eloquent
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('clientes');
+    }
+};
+```
+
+> **Não apague o `down()`.** Ele vem pronto do `make:model -m` e é o que o
+> `migrate:rollback` executa. Sem o método, o `Migrator` do Laravel **pula a
+> volta em silêncio** (`method_exists($migration, $method)`, `Migrator.php:439`):
+> o comando avisa "rolled back" com sucesso, apaga a linha da tabela
+> `migrations` — e deixa a tabela `clientes` de pé no banco. O `migrate`
+> seguinte morre com `Table 'clientes' already exists` e nada na tela explica de
+> onde veio. É a migration que é reversível, não o comando.
+
+### `app/Models/Cliente.php`
+
+```php
+<?php
+
+namespace App\Models;
+
+use Database\Factories\ClienteFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * Fillable = campos liberados para Cliente::create($dados).
+ * Sem a lista, o create() estoura MassAssignmentException; com a lista,
+ * um campo que ficou de fora é ignorado em silêncio.
+ */
+#[Fillable(['nome', 'email', 'telefone', 'empresa', 'status'])]
+class Cliente extends Model
+{
+    /** @use HasFactory<ClienteFactory> */
+    use HasFactory;
+}
+```
+
+> **Lista vazia é o pior dos mundos.** `#[Fillable([])]` ou
+> `protected $fillable = [];` não significa "libera tudo" — significa "não
+> libera nada", e o `create()` estoura igual a não ter lista nenhuma.
+
+### `database/factories/ClienteFactory.php`
+
+```php
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Cliente;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends Factory<Cliente>
+ */
+class ClienteFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'nome' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),          // unique(): a coluna é UNIQUE; sem isso o Faker repete e o seed morre em Duplicate entry
+            'telefone' => fake()->numerify('(##) #####-####'), // cada # vira um dígito; parênteses e hífen ficam literais
+            'empresa' => fake()->company(),
+            'status' => fake()->randomElement(['ativo', 'inativo', 'prospecto']),
+        ];
+    }
+}
+```
+
+### `database/seeders/ClienteSeeder.php`
+
+```php
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Cliente;
+use Illuminate\Database\Seeder;
+
+class ClienteSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        Cliente::factory()->count(35)->create(); // create() grava; make() só montaria os 35 objetos na memória
+    }
+}
+```
+
+> O `use Illuminate\Database\Console\Seeds\WithoutModelEvents;` que o
+> `make:seeder` deixa no topo não é usado aqui — o `pint` o remove sozinho.
+
+### `routes/web.php`
+
+```php
+<?php
+
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\ClienteController;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+
+// Tudo aqui entra no middleware "web": sessão, cookies e CSRF já ligados.
+// Cada tela de auth usa a mesma URL duas vezes — GET mostra o form, POST processa.
+
+Route::get('/', function () {
+    return Inertia::render('Teste', ['mensagem' => 'Inertia respondendo']); // procura resources/js/pages/Teste.jsx
+});
+
+Route::get('/register', [RegisteredUserController::class, 'create'])
+    ->name('register'); // apelido: permite route('register') em vez da URL escrita na mão
+
+Route::post('/register', [RegisteredUserController::class, 'store']); // valida e cria o usuário
+
+Route::get('/login', [AuthenticatedSessionController::class, 'create'])
+    ->name('login'); // nome obrigatório: o middleware "auth" redireciona pra rota chamada "login"
+
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])
+    ->middleware('throttle:6,1'); // 6 req/min por IP; a 7ª leva 429 antes do controller
+
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->middleware('auth') // só quem está logado chega no controller
+    ->name('logout'); // POST e não GET: prefetch do navegador ou <img> maliciosa disparam GET sozinhos
+
+Route::middleware('auth')->group(function () { // tudo aqui dentro exige login
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+
+    Route::resource('clientes', ClienteController::class)->except(['show']); // 6 rotas numa linha
+});
+```
+
+> **Por que o `/logout` ficou de fora do grupo?** Porque ele já carrega o
+> próprio `->middleware('auth')` desde a aula de autenticação, e o passo 5 só
+> mandou mover o dashboard. Movê-lo para dentro do grupo (e apagar o
+> `->middleware('auth')` da linha) dá exatamente o mesmo resultado — é
+> arrumação, não correção.
+
 ### `app/Http/Controllers/ClienteController.php`
 
 ```php
@@ -1711,6 +1905,138 @@ class ClienteController extends Controller
 }
 ```
 
+### `app/Http/Requests/StoreClienteRequest.php`
+
+```php
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+
+class StoreClienteRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true; // nasce false = 403 em todo cadastro. A rota já exige login; permissão fina fica para uma Policy
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'nome' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:clientes,email'],
+            'telefone' => ['nullable', 'string', 'max:20'],
+            'empresa' => ['nullable', 'string', 'max:255'],
+            'status' => ['required', 'in:ativo,inativo,prospecto'],
+        ];
+    }
+}
+```
+
+### `app/Http/Requests/UpdateClienteRequest.php`
+
+```php
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class UpdateClienteRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'nome' => ['required', 'string', 'max:255'],
+            // Rule::unique ignorando o próprio registro — sem isso, salvar sem mudar
+            // o e-mail acusa "já cadastrado". $this->cliente é o model do route binding.
+            'email' => ['required', 'email', 'max:255', Rule::unique('clientes')->ignore($this->cliente)],
+            'telefone' => ['nullable', 'string', 'max:20'],
+            'empresa' => ['nullable', 'string', 'max:255'],
+            'status' => ['required', 'in:ativo,inativo,prospecto'],
+        ];
+    }
+}
+```
+
+> Os dois arquivos são idênticos menos por **uma** linha, a do `email`. Se você
+> for comparar um com o outro para achar um erro, é lá que a diferença legítima
+> mora — qualquer outra é engano.
+
+### `app/Http/Middleware/HandleInertiaRequests.php`
+
+Arquivo que já existia desde a aula de autenticação; o CRUD só acrescenta a
+chave `flash` (passo 15a).
+
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Illuminate\Http\Request;
+use Inertia\Middleware;
+
+class HandleInertiaRequests extends Middleware
+{
+    protected $rootView = 'app'; // Define a View principal do Inertia.
+
+    public function version(Request $request): ?string
+    {
+        return parent::version($request); // Verifica a versão dos arquivos.
+    }
+
+    public function share(Request $request): array
+    {
+        return [
+            ...parent::share($request), // Mantém os dados padrão do Inertia.
+
+            'auth' => [
+                'user' => $request->user() ? [ // Verifica se há usuário logado.
+                    'id' => $request->user()->id,       // ID
+                    'name' => $request->user()->name,   // Nome
+                    'email' => $request->user()->email, // E-mail
+                ] : null, // Se não estiver logado, retorna null.
+            ], // ← esta vírgula não existia enquanto 'auth' era o último item
+
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'), // fn(): só lê a sessão quando a página é montada
+            ],
+        ];
+    }
+}
+```
+
+> Tudo que sai daqui chega em **toda** página como prop compartilhada — é por
+> este mesmo caminho que o `auth.user` já viaja. Quem lê no React é o
+> `usePage()` do `AppLayout`, nunca o parâmetro da função da página.
+
+## A.2 — Frontend
+
 ### `resources/js/layouts/AppLayout.jsx`
 
 ```jsx
@@ -1767,6 +2093,30 @@ export default function AppLayout({ children }) {
     );
 }
 ```
+
+### `resources/js/pages/Dashboard.jsx`
+
+```jsx
+import { Head } from '@inertiajs/react';
+import AppLayout from '../layouts/AppLayout';
+
+export default function Dashboard({ auth }) {
+    return (
+        <AppLayout>
+            <Head title="Dashboard — CRM" />
+
+            <div className="dashboard">
+                <h1 className="h3 mt-3 text-center">Bem-vindo, {auth.user.name}</h1>
+            </div>
+        </AppLayout>
+    );
+}
+```
+
+> A navbar que morava aqui foi embora no passo 8 — ela agora é do `AppLayout`, e
+> esta página só diz **o que tem dentro da moldura**. `auth` chega como
+> parâmetro porque é prop compartilhada; o `AppLayout` lê a mesma coisa pelo
+> `usePage()` porque componente de layout não recebe as props da página.
 
 ### `resources/js/pages/Clientes/Index.jsx`
 
@@ -2034,6 +2384,115 @@ export default function Form({ cliente }) {
     );
 }
 ```
+
+## A.3 — Estilos
+
+### `resources/scss/_layout.scss`
+
+```scss
+// resources/scss/_layout.scss — a moldura das telas logadas (AppLayout.jsx)
+.app-layout {
+    min-height: 100vh;
+    background-color: $white;
+
+    .navbar {
+        background-color: #0bdfbd;
+    }
+}
+```
+
+> Este partial entra **depois** do Bootstrap (veja o `app.scss` abaixo), então
+> ele enxerga as variáveis do framework: `$white` aqui é isso. Pela mesma razão,
+> se a cor da navbar for a verde da marca, escreva `background-color: $primary;`
+> em vez do hexadecimal repetido — a cor passa a ter um lugar só, o topo do
+> `app.scss`.
+
+### `resources/scss/_dashboard.scss`
+
+```scss
+// resources/scss/_dashboard.scss — só o que é do dashboard
+.dashboard {
+    h1 {
+        color: #333;
+    }
+}
+```
+
+> Ficou pequeno de propósito: a navbar e o fundo saíram daqui para o
+> `_layout.scss` no passo 8c. Um partial por tela, e o que é de **todas** as
+> telas é do layout.
+
+### `resources/scss/app.scss`
+
+Só o fim do arquivo muda — o bloco 1 (variáveis) e o `@import` do Bootstrap
+continuam exatamente como estão:
+
+```scss
+// 3. NOSSO TEMA por último: vence a cascata e enxerga $black, $font-weight-bold etc.
+// Um partial por tela, todos depois do Bootstrap. Ele entra UMA vez só.
+@import 'login';
+@import 'layout';
+@import 'dashboard';
+```
+
+> **A ordem não é decorativa.** Um `@import` de partial nosso **antes** do
+> `@import 'bootstrap/scss/bootstrap'` quebra o build inteiro com
+> `Undefined variable: $white` — porque a variável só passa a existir depois que
+> o Bootstrap é compilado. Já aconteceu neste projeto.
+
+## A.4 — Testes
+
+### `tests/Pest.php`
+
+Uma linha, hoje comentada:
+
+```php
+pest()->extend(TestCase::class)
+    ->use(RefreshDatabase::class) // recria as tabelas a cada teste: um teste não suja o banco do próximo
+    ->in('Feature');
+```
+
+> O resto do arquivo (expectations, helpers) não muda. E lembre do que está no
+> `phpunit.xml`: **os testes rodam em SQLite em memória, o app roda em MySQL**.
+> Os seus 35 clientes do seeder não existem lá dentro — cada teste cria os
+> próprios dados com a factory.
+
+### `tests/Feature/ClienteCrudTest.php`
+
+```php
+<?php
+
+use App\Models\Cliente;
+use App\Models\User;
+
+it('cria um cliente', function () {
+    $this->actingAs(User::factory()->create())
+        ->post('/clientes', [
+            'nome' => 'Acme',
+            'email' => 'contato@acme.test',
+            'status' => 'ativo',
+        ])
+        ->assertRedirect('/clientes');
+
+    expect(Cliente::where('email', 'contato@acme.test')->exists())->toBeTrue();
+});
+
+it('recusa e-mail duplicado', function () {
+    $cliente = Cliente::factory()->create();
+
+    $this->actingAs(User::factory()->create())
+        ->post('/clientes', ['nome' => 'X', 'email' => $cliente->email, 'status' => 'ativo'])
+        ->assertSessionHasErrors('email');
+});
+
+it('bloqueia visitante', function () {
+    $this->get('/clientes')->assertRedirect('/login');
+});
+```
+
+> Três testes, três "Confira" que você já fez na mão: o cadastro do passo 14, a
+> validação do passo 13 e o grupo `auth` do passo 5. A diferença é que estes
+> você não precisa refazer nunca mais.
 
 ## B — Deu errado? Sintoma → causa
 
@@ -2387,6 +2846,10 @@ mais trabalhoso:
 | `resources/js/pages/Clientes/Index.jsx` | Tabela, badge, paginação, lápis e modal de exclusão (estado `alvo`). | 7, 9, 10, 11, 18, 20 |
 | `resources/js/pages/Clientes/Form.jsx` | Criar e editar na mesma tela: com ou sem a prop `cliente`. | 14, 18 |
 | `resources/scss/_layout.scss` | Cor da navbar, vinda do `_dashboard.scss`. | 8 |
+| `resources/scss/_dashboard.scss` | Perde a navbar e o fundo: sobra só o `h1`. | 8 |
 | `resources/scss/app.scss` | Ganha o `@import 'layout'`. | 8 |
 | `tests/Pest.php` | `RefreshDatabase` ligado. | 21 |
 | `tests/Feature/ClienteCrudTest.php` | Criação, duplicidade, bloqueio de visitante. | 21 |
+
+O conteúdo **inteiro** de cada um destes arquivos está no Apêndice A, agrupado
+em A.1 backend, A.2 frontend, A.3 estilos e A.4 testes.
