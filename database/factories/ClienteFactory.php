@@ -18,6 +18,11 @@ class ClienteFactory extends Factory
     public function definition(): array
     {
         return [
+            'nome' => fake()->name(),
+            'email'=> fake()->unique()->safeEmail(),
+            'telefone'=>fake()->numerify(),
+            'empresa'=>fake()->company(),
+            'status'=>fake()->randomElement(['ativo, inativo', 'prospecto'])
             //
         ];
     }

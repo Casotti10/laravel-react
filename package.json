@@ -21,10 +21,12 @@
         "@fontsource/poppins": "^5.3.0",
         "@inertiajs/react": "^3.6.1",
         "@inertiajs/vite": "^3.6.1",
+        "@tailwindcss/vite": "^4.3.3",
         "bootstrap": "^5.3.8",
         "bootstrap-icons": "^1.13.1",
         "react": "^19.2.8",
         "react-dom": "^19.2.8",
-        "sass": "^1.104.0"
+        "sass": "^1.104.0",
+        "tailwindcss": "^4.3.3"
     }
 }

@@ -9,6 +9,9 @@ import '@fontsource/poppins/700.css';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
+import '../scss/app.scss';
+import '../scss/tailwind.css';
+
 
 // Único ponto de entrada do React. Ele não sabe quais páginas existem:
 // quem escolhe é o Laravel, mandando o nome em Inertia::render('Auth/Login').
