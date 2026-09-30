@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\ClienteController;
 
 // Tudo aqui entra no middleware "web": sessão, cookies e CSRF já ligados.
 // Cada tela de auth usa a mesma URL duas vezes — GET mostra o form, POST processa.
@@ -27,6 +28,10 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth') // só quem está logado chega no controller
     ->name('logout'); // POST e não GET: prefetch do navegador ou <img> maliciosa disparam GET sozinhos
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware('auth')->name('dashboard'); // closure enquanto não há lógica; depois vira DashboardController
+Route::middleware('auth')->group(function () { // tudo aqui dentro exige login
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard'); //retorna o react
+    })->name('dashboard');
+
+    Route::resource('clientes', ClienteController::class)->except(['show']); // 6 rotas numa linha
+});
