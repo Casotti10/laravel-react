@@ -5,15 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Cliente;
 use App\Http\Requests\StoreClienteRequest;
 use App\Http\Requests\UpdateClienteRequest;
+use Inertia\Inertia;
+use Inertia\Response;
+
 
 class ClienteController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index() //ponte entre o backend e o frontend
     {
-        //
+        return Inertia::render('Clientes/Index', [
+            'clientes' => Cliente::latest()->paginate(10),
+        ]);
     }
 
     /**
