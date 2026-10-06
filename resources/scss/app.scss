@@ -1,10 +1,10 @@
 
-
 // 1. NOSSAS VARIÁVEIS — antes do Bootstrap, senão o !default dele já terá vencido.
 
 // Marca
 $primary:                 #13b497;
 $light:                   #f6f6f6;
+
 
 // O Bootstrap decide o texto de .btn-primary/.badge com color-contrast():
 // branco sobre o verde dá ~2,6:1 e reprovava no padrão 4.5, saindo preto.
@@ -38,3 +38,7 @@ $border-radius:           .46rem;
 // Um partial por tela, todos depois do Bootstrap. Ele entra UMA vez só.
 @import 'login';
 
+// resources/scss/app.scss — no fim, depois do Bootstrap
+@import 'login';
+@import 'layout';
+@import 'dashboard';

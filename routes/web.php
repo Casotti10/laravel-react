@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ClienteController;
 
+
 // Tudo aqui entra no middleware "web": sessão, cookies e CSRF já ligados.
 // Cada tela de auth usa a mesma URL duas vezes — GET mostra o form, POST processa.
 

@@ -22,7 +22,7 @@ class ClienteFactory extends Factory
             'email'=> fake()->unique()->safeEmail(),
             'telefone'=>fake()->numerify(),
             'empresa'=>fake()->company(),
-            'status'=>fake()->randomElement(['ativo, inativo', 'prospecto'])
+            'status'=>fake()->randomElement(['ativo', 'inativo', 'prospecto'])
             //
         ];
     }

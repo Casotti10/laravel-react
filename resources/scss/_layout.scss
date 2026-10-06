@@ -1,0 +1,25 @@
+.app-layout {
+    min-height: 100vh;
+    background-color: $white;
+
+    .navbar {
+        background-color: #0bdfbd;
+
+        // Links de navegação ("Dashboard" e "Clientes")
+        .nav-link {
+            color: #333333; // Cor dos links normais
+
+            &.active {
+                color: #000000; // Cor do link da página ativa
+                font-weight: 600;
+            }
+
+            &:hover {
+                color: #3e3e3e; // Cor ao passar o mouse
+            }
+        }
+
+    }
+
+
+}
