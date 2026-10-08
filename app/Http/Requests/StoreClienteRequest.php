@@ -12,18 +12,18 @@ class StoreClienteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;     //nasce false = 403 em todo cadastro. A rota já exige login; permissão fina fica para uma Policy
+
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'nome' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:clientes,email'],
+            'telefone' => ['nullable', 'string', 'max:20'],
+            'empresa' => ['nullable', 'string', 'max:255'],
+            'status' => ['required', 'in:ativo,inativo,prospecto'],
         ];
     }
 }

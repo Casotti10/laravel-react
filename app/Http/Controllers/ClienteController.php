@@ -7,13 +7,12 @@ use App\Http\Requests\StoreClienteRequest;
 use App\Http\Requests\UpdateClienteRequest;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Http\RedirectResponse;
 
 
 class ClienteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index() //ponte entre o backend e o frontend
     {
         return Inertia::render('Clientes/Index', [
@@ -21,46 +20,30 @@ class ClienteController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): Response
     {
-        //
+        return Inertia::render('Clientes/Form');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreClienteRequest $request)
+    public function store(StoreClienteRequest $request): RedirectResponse
     {
-        //
+        Cliente::create($request->validated()); // validated(): só os campos que passaram pelas regras
+
+        return redirect()->route('clientes.index')
+            ->with('success', 'Cliente cadastrado com sucesso.'); // flash: vive uma requisição só
     }
 
-    /**
-     * Display the specified resource.
-     */
 
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Cliente $cliente)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateClienteRequest $request, Cliente $cliente)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Cliente $cliente)
     {
         //

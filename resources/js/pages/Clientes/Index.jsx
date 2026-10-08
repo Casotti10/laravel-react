@@ -9,6 +9,16 @@ const corDoStatus = {
     prospecto: 'bg-warning-subtle text-warning-emphasis',
 };
 
+const formatarRotulo = (label) => {
+    if (label.includes('Previous')) {
+        return '&laquo; Anterior';
+    }
+    if (label.includes('Next')) {
+        return 'Próximo &raquo;';
+    }
+    return label;
+};
+
 export default function Index({ clientes }) {
     return (
         <AppLayout>
@@ -60,6 +70,27 @@ export default function Index({ clientes }) {
                     </table>
                 </div>
             </div>
+
+            {clientes.last_page > 1 && (  // Só mostra a paginação se existir mais de uma página
+                <nav className="mt-3" aria-label="Paginação de clientes">
+                    <ul className="pagination justify-content-center">  {/* Lista dos botões de paginação */}
+                        {clientes.links.map((link, indice) => (
+                            <li key={indice} className={`page-item ${link.active ? 'active' : ''} ${link.url ? '' : 'disabled'}`}>
+
+                                {link.url ? (
+                                    <Link href={link.url}
+                                          className="page-link"
+                                          dangerouslySetInnerHTML={{  __html: formatarRotulo(link.label) }} />
+                                ) : (
+                                    <span className="page-link" dangerouslySetInnerHTML={{  __html: formatarRotulo(link.label) }} />
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+
+            )}
+
         </AppLayout>
     );
 }
