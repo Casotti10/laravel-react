@@ -9,7 +9,7 @@ export default function Form (){
         email: '',
         telefone: '',
         empresa: '',
-        status: 'prospecto',
+        status: '',
     });
 
     function submit(e){
@@ -23,17 +23,17 @@ export default function Form (){
 
             <div className="row justify-content-center">
                 <div className="col-lg-8">
-                    <div className="card">
+                    <div className="card shadow-sm">
                         <div className="card-header">
-                            <h1 className="h5 mb-0>">Novo cliente</h1>
+                            <h1 className="h5 mb-0 text-dark fw-bold>">Novo cliente</h1>
                         </div>
 
                         {/* NOME*/}
                         <div className="card-body">  {/* noValidate: desliga a validação do navegador; quem valida é o Laravel */}
                             <form onSubmit={submit} noValidate>
-                                <div className="row-cols-1">
+                                <div className="row-cols-1 ">
 
-                                    <div className="mb-4">
+                                    <div className="mb-4-dark fw-bold">
                                         <label htmlFor="nome " className="form-label"> Nome </label>
                                         <input
                                         id="nome "
@@ -48,7 +48,7 @@ export default function Form (){
                                     </div>
 
                                     {/* EMAIL */}
-                                    <div className="mb-4">
+                                    <div className="mb-4-dark fw-bold">
                                         <label htmlFor="email" className="form-label"> Email </label>
                                         <input
                                             id="email"
@@ -63,7 +63,7 @@ export default function Form (){
                                     </div>
 
                                     {/* TELEFONE */}
-                                    <div className="mb-4">
+                                    <div className="mb-4-dark fw-bold">
                                         <label htmlFor="email" className="form-label">Telefone </label>
                                         <input
                                             id="telefone"
@@ -78,14 +78,14 @@ export default function Form (){
                                     </div>
 
                                     {/* EMPRESA */}
-                                    <div className="mb-4">
+                                    <div className="mb-4-dark fw-bold">
                                         <label htmlFor="Empresa" className="form-label">Empresa </label>
                                         <input
                                             id="empresa"
                                             type="text"
                                             className={`form-control' ${errors.empresa ? 'is-invalid' : ''}`}
                                             value={data.empresa}
-                                            onChange={(e) => setData('telefone', e.target.value)}
+                                            onChange={(e) => setData('empresa', e.target.value)}
                                         />
                                         {errors.empresa && (
                                             <div className="invalid-feedback"> {errors.empresa} </div>
@@ -93,7 +93,7 @@ export default function Form (){
                                     </div>
 
                                     {/*STATUS*/}
-                                    <div className="mb-4 form-select">
+                                    <div className="mmb-4-dark fw-bold orm-select">
                                         <label htmlFor="status" className="form-label">Status</label>
                                         <select
                                             id="status"
