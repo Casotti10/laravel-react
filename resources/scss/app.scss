@@ -5,6 +5,13 @@
 $primary:                 #13b497;
 $light:                   #f6f6f6;
 
+.form-cliente-card {
+    background-color: #ffffff;
+
+    .card-header {
+        background-color: #13b497;
+    }
+}
 
 // O Bootstrap decide o texto de .btn-primary/.badge com color-contrast():
 // branco sobre o verde dá ~2,6:1 e reprovava no padrão 4.5, saindo preto.

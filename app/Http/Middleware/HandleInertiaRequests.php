@@ -20,13 +20,18 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request), // Mantém os dados padrão do Inertia.
 
+            // 1. Dados de Autenticação
             'auth' => [
-                'user' => $request->user() ? [ // Verifica se há usuário logado.
-                    'id' => $request->user()->id,       // ID
-                    'name' => $request->user()->name,   // Nome
-                    'email' => $request->user()->email, // E-mail
-                ] : null, // Se não estiver logado, retorna null.
-            ]
+                'user' => $request->user() ? [
+                    'id' => $request->user()->id,
+                    'name' => $request->user()->name,
+                    'email' => $request->user()->email,
+                ] : null,
+            ],
+
+            'flash' => [
+                'success' => fn() => $request->session()->get('success'),
+            ],
         ];
     }
 }

@@ -4,7 +4,7 @@ import { Link, usePage } from '@inertiajs/react';
 // Quem usa é a página, embrulhando o próprio conteúdo.
 export default function AppLayout({ children }) {
     const { url, props } = usePage(); // url = endereço atual; props = as compartilhadas
-    const { auth } = props;
+    const { auth, flash } = props;
 
     return (
         <div className="app-layout">
@@ -38,6 +38,12 @@ export default function AppLayout({ children }) {
             </nav>
 
             <main className="container py-4">
+                {flash.sucess && (
+                    <div className="alert alert-success" role="alert">
+                        <i className="bi bi-check-circle me-2"></i>
+                        {flash.success}
+                    </div>
+                )}
                 {children}
             </main>
         </div>

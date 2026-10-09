@@ -41,7 +41,6 @@ export default function Index({ clientes }) {
                             <th scope="col">E-mail</th>
                             <th scope="col">Empresa</th>
                             <th scope="col">Status</th>
-                            <th scope="col" className="text-end">Ações</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -55,7 +54,6 @@ export default function Index({ clientes }) {
                                         {cliente.status}
                                     </span>
                                 </td>
-                                <td className="text-end"></td>
                             </tr>
                         ))}
 
