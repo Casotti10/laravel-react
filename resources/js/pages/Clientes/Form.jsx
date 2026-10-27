@@ -2,23 +2,34 @@
 import {Head, Link, useForm} from '@inertiajs/react';
 import AppLayout from '../../layouts/AppLayout';
 
-export default function Form (){
+export default function Form ({ cliente }) {
+
+    const editando= Boolean(cliente);
+
     //AS CHAVES TEM DE SER IGUAIS AS DAS RULES() DOS StoreClienteRequest.
-    const { data, setData, post, processing, errors} = useForm({
-        nome: '',
-        email: '',
-        telefone: '',
-        empresa: '',
-        status: '',
+    const { data, setData, post, put, processing, errors} = useForm({
+        nome: cliente?.nome ?? '',
+        email: cliente?.email ?? '',
+        telefone: cliente?.telefone ?? '',
+        empresa: cliente?.empresa ?? '',
+        status: cliente?.status ?? 'prospecto'
     });
 
     function submit(e){
         e.preventDefault();  //sem isso o navegador recarrega a pagina inteira
-        post('/clientes'); // -> store()
+        if(editando){
+            put(`/clientes/${cliente.id}`); //->update
+        }else{
+            post(`/clientes`);  // -> store
+        }
+
     }
+    const titulo = editando ? 'Editar cliente' : 'Novo cliente';
 
     return(
+
         <AppLayout>
+
             <Head title="Novo Cliente - CRM" />
 
             <div className="row justify-content-center">

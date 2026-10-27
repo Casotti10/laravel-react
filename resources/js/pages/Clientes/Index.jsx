@@ -41,6 +41,7 @@ export default function Index({ clientes }) {
                             <th scope="col">E-mail</th>
                             <th scope="col">Empresa</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Ações</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -53,6 +54,16 @@ export default function Index({ clientes }) {
                                     <span className={`badge text-capitalize ${corDoStatus[cliente.status] ?? 'text-bg-secondary'}`}>
                                         {cliente.status}
                                     </span>
+
+                                    <td>
+                                        <Link
+                                            href={`/clientes/${cliente.id}/edit`}
+                                            className="btn btn-sm btn-outline-secondary me-1"
+                                            aria-label={`Editar ${cliente.nome}`}
+                                        >
+                                            <i className="bi bi-pencil-fill"></i>
+                                        </Link>
+                                    </td>
                                 </td>
                             </tr>
                         ))}
