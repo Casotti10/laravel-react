@@ -1,6 +1,9 @@
 // resources/js/pages/Clientes/Index.jsx
-import { Head, Link } from '@inertiajs/react';
+import { useState } from 'react';                     // NOVO
 import AppLayout from '../../layouts/AppLayout';
+import { Head, Link, router } from '@inertiajs/react'; // + router
+
+
 
 // Fixo: não depende de props nem de estado, então mora fora do componente.
 const corDoStatus = {
@@ -10,16 +13,23 @@ const corDoStatus = {
 };
 
 const formatarRotulo = (label) => {
-    if (label.includes('Previous')) {
-        return '&laquo; Anterior';
-    }
-    if (label.includes('Next')) {
-        return 'Próximo &raquo;';
-    }
+    if (label.includes('Previous')) return '« Anterior';
+    if (label.includes('Next')) return 'Próximo »';
     return label;
 };
 
+
+
 export default function Index({ clientes }) {
+
+    const [alvo, setAlvo] = useState(null);
+
+    function excluir() {
+        router.delete(`/clientes/${alvo.id}`, {
+            onFinish: () => setAlvo(null), // sem isto o modal continua aberto depois de excluir
+        });
+    }
+
     return (
         <AppLayout>
             <Head title="Clientes — CRM" />
@@ -50,21 +60,31 @@ export default function Index({ clientes }) {
                                 <td>{cliente.nome}</td>
                                 <td>{cliente.email}</td>
                                 <td>{cliente.empresa ?? '—'}</td>
+
                                 <td>
                                     <span className={`badge text-capitalize ${corDoStatus[cliente.status] ?? 'text-bg-secondary'}`}>
                                         {cliente.status}
                                     </span>
+                                </td>
 
                                     <td>
                                         <Link
                                             href={`/clientes/${cliente.id}/edit`}
-                                            className="btn btn-sm btn-outline-secondary me-1"
+                                            className="btn btn-sm btn-outline-box me-3"
                                             aria-label={`Editar ${cliente.nome}`}
                                         >
                                             <i className="bi bi-pencil-fill"></i>
                                         </Link>
+                                        <button
+                                            type="button"
+                                            className="btn btn-sm btn-outline-danger"
+                                            aria-label={`Excluir ${cliente.nome}`}
+                                            onClick={() => setAlvo(cliente)}
+                                        >
+                                            <i className="bi bi-trash"></i>
+                                        </button>
                                     </td>
-                                </td>
+
                             </tr>
                         ))}
 

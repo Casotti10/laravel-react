@@ -23,6 +23,7 @@ export default function Form ({ cliente }) {
             post(`/clientes`);  // -> store
         }
 
+
     }
     const titulo = editando ? 'Editar cliente' : 'Novo cliente';
 

@@ -4,3 +4,15 @@
         color: #333;
     }
 }
+
+.btn-outline-box {
+    color: $btn-outline-box;
+    border: 1px solid $btn-outline-box;
+    background-color: transparent;
+
+    &:hover {
+        color: #fff;
+        background-color: $btn-outline-box;
+        border-color: $btn-outline-box;
+    }
+}
